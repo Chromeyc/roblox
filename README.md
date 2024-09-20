@@ -2,6 +2,7 @@
 # Vystro Hub
 
 Vystro Hub is a Script Hub For Multiple Roblox games!
+⚠️NOTE: THIS SCRIPT IS NOT RELEASED YET!
 
 ## Games
 
@@ -29,7 +30,7 @@ Paste This Loadstring into Your Executor!
 ```
 loadstring(game:HttpGet("https://github.com/Chromeyc/roblox/blob/main/Vystro%20Hub/Games/main.lua))()
 ```
-    
+⚠️ Use At Your Own Risk! ⚠️     
 
 ## FAQ
 
