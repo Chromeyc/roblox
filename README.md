@@ -1,7 +1,7 @@
 
 # Vystro Hub
 
-Vystro Hub is a Script Hub For Multiple Roblox games It Supports many Games!
+Vystro Hub is a Script Hub For Multiple Roblox games!
 
 ## Games
 
