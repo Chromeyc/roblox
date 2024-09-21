@@ -5,9 +5,9 @@ Vystro Hub is a Script Hub For Multiple Roblox games!
 
 ## Games
 
- - Arsenal ❌
- - Emergency Hamburg ❌
- - Studs Jumps but every 5 second u get +1 jump ✅
+ - [Arsenal](https://www.roblox.com/games/286090429/Arsenal) ❌
+ - [Emergency Hamburg](https://www.roblox.com/games/7711635737/Emergency-Hamburg) ❌
+ - [Studs Jumps but every 5 second u get +1 jump](https://www.roblox.com/games/12033633822/Studs-Jumps-but-every-5-second-u-get-1-jump) ✅
 
 
 ## Script Features
@@ -20,11 +20,12 @@ Vystro Hub is a Script Hub For Multiple Roblox games!
 
 ## Supported Executors
 
-+ Wave
-+ Synapse Z
-+ Solara
-+ Nezur Web Executor
-+ Delta
++ [Wave](https://getwave.gg/)
++ [Synapse Z](https://synapsez.net/)
++ [Solara](https://getsolara.dev/)
++ [Nezur Web Executor](https://nezur.io/)
++ [Delta](https://deltaexploits.gg/)
++ [Macsploit](https://discord.gg/macsploit)
 
 
 
