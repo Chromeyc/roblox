@@ -5,17 +5,17 @@ Vystro Hub is a Script Hub For Multiple Roblox games!
 
 ## Games
 
- - Arsenal (Not Done)
- - Emergency Hamburg (Not Done)
- - Studs Jumps but every 5 second u get +1 jump (Done)
+ - Arsenal ❌
+ - Emergency Hamburg ❌
+ - Studs Jumps but every 5 second u get +1 jump ✅
 
 
 ## Script Features
 
-- Studs Jumps but every 5 second u get +1 jump
-+ Autofarm Stars
-+ Auto Rebirth
-+ Anti AFK
+- [Studs Jumps but every 5 second u get +1 jump](https://www.roblox.com/games/12033633822/Studs-Jumps-but-every-5-second-u-get-1-jump)
++ Autofarm Stars ✅
++ Auto Rebirth ✅
++ Anti AFK ✅
 
 
 ## Supported Executors
