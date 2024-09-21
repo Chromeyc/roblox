@@ -8,4 +8,8 @@ end
 if game.PlaceId == 286090429 then
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Chromeyc/roblox/main/Vystro%20Hub/Games/Arsenal.lua"))()
 end
+-- // Studs Jumps but every 5 second u get +1 jump \\
+if game.PlaceId == 12033633822 then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Chromeyc/roblox/refs/heads/main/Vystro%20Hub/Games/studs.lua"))()
+end
 -- // More Soon \\
