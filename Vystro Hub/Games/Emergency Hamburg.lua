@@ -15,7 +15,6 @@ local Window = Library:CreateWindow({
 
 local Tabs = {
     Main = Window:AddTab('Main'),
-    ['Main'] = Window:AddTab('Main'),
 }
 
 local LeftGroupBox = Tabs.Main:AddLeftGroupbox('Note:')
