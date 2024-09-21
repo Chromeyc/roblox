@@ -34,7 +34,7 @@ Vystro Hub is a Script Hub For Multiple Roblox games!
 Paste This Loadstring into Your Executor!
 
 ```
-loadstring(game:HttpGet("https://github.com/Chromeyc/roblox/blob/main/Vystro%20Hub/Games/main.lua))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Chromeyc/roblox/refs/heads/main/Vystro%20Hub/Games/main.lua"))()
 ```
 ⚠️ Use At Your Own Risk! ⚠️     
 
