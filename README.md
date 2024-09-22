@@ -8,6 +8,7 @@ Vystro Hub is a Script Hub For Multiple Roblox games!
  - [Arsenal](https://www.roblox.com/games/286090429/Arsenal) ❌
  - [Emergency Hamburg](https://www.roblox.com/games/7711635737/Emergency-Hamburg) ❌
  - [Studs Jumps but every 5 second u get +1 jump](https://www.roblox.com/games/12033633822/Studs-Jumps-but-every-5-second-u-get-1-jump) ✅
+ - [Roblox But Every Second You Get +1 Jump Power](https://www.roblox.com/games/12581519500/UPD-Roblox-But-Every-Second-You-Get-1-Jump-Power) ✅
 
 
 ## Script Features
@@ -16,6 +17,10 @@ Vystro Hub is a Script Hub For Multiple Roblox games!
 + Autofarm Stars ✅
 + Auto Rebirth ✅
 + Anti AFK ✅
+
+ - [Roblox But Every Second You Get +1 Jump Power](https://www.roblox.com/games/12581519500/UPD-Roblox-But-Every-Second-You-Get-1-Jump-Power)
+ + Autofarm Wins ✅
+ + Give Velocity  ✅
 
 
 ## Supported Executors
