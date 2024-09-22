@@ -12,4 +12,8 @@ end
 if game.PlaceId == 12033633822 then
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Chromeyc/roblox/refs/heads/main/Vystro%20Hub/Games/studs.lua"))()
 end
+-- // [UPD]Roblox But Every Second You Get +1 Jump Power \\
+if game.PlaceId == 12581519500 then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Chromeyc/roblox/refs/heads/main/Vystro%20Hub/Games/Jump"))()
+end
 -- // More Soon \\
