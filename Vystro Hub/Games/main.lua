@@ -17,7 +17,8 @@ if game.PlaceId == 12581519500 then
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Chromeyc/roblox/refs/heads/main/Vystro%20Hub/Games/Jump"))()
 end
 -- // [UPDATE] Ability Wars \\
-if game.PlaceId == 8260276694, 10201596675 then
+if game.PlaceId == 8260276694 or game.PlaceId == 10201596675 then
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Chromeyc/roblox/refs/heads/main/Vystro%20Hub/Games/Ability%20Wars.lua"))()
 end
+
 -- // More Soon \\
