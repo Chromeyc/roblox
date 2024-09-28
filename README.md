@@ -27,7 +27,10 @@ Vystro Hub is a Script Hub For Multiple Roblox games!
  + Hitbox Extender ✅
  + Walkspeed ✅
  + Autofarm  ✅ (Works Best In Duels Just Join Duels And be afk)
-
+ + Mod Check ✅
+ + Auto Respawn ✅
+ + Anti Void ✅
+ + Silent Killaura (Up To 100 Range) ✅
 
 ## Supported Executors
 
