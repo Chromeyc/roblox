@@ -24,6 +24,7 @@ Vystro Hub is a Script Hub For Multiple Roblox games!
  + Give Velocity  ✅
 
  - [Ability Wars](https://www.roblox.com/games/8260276694/UPDATE-Ability-Wars)
+ - [Showcase Video](https://www.youtube.com/watch?v=qw8wFfOb6K0&ab_channel=Roody)
  + Hitbox Extender ✅
  + Walkspeed ✅
  + Autofarm  ✅ (Works Best In Duels Just Join Duels And be afk)
