@@ -20,6 +20,10 @@ end
 if game.PlaceId == 8260276694 or game.PlaceId == 10201596675 then
 loadstring(game:HttpGet("https://raw.githubusercontent.com/Chromeyc/roblox/refs/heads/main/Vystro%20Hub/Games/Ability%20Wars.lua"))()
 end
+-- // Shindo Life \\
+if game.PlaceId == 4616652839 then
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Chromeyc/roblox/refs/heads/main/Vystro%20Hub/Games/Shindolife.lua"))()
+end
 
 -- // More Soon \\
 
