@@ -112,6 +112,69 @@ local function TeleportToPlayer(playerName)
     return false
 end
 
+local function BringPlayerToMe(playerName)
+    local targetPlayer = game.Players:FindFirstChild(playerName)
+    if not targetPlayer then return false end
+    
+    local localPlayer = game.Players.LocalPlayer
+    if not localPlayer then return false end
+    
+    local function getCharacterAndRoot(player)
+        local char = player.Character
+        if not char then return nil end
+        
+        local root = char:FindFirstChild("HumanoidRootPart")
+        if not root then return nil end
+        
+        local humanoid = char:FindFirstChild("Humanoid")
+        if not humanoid then return nil end
+        
+        return char, root, humanoid
+    end
+    
+    local maxAttempts = 30
+    local attempts = 0
+    
+    while attempts < maxAttempts do
+        local localChar, localRoot, localHum = getCharacterAndRoot(localPlayer)
+        local targetChar, targetRoot, targetHum = getCharacterAndRoot(targetPlayer)
+        
+        if localChar and localRoot and targetChar and targetRoot and targetHum then
+            local networkClaim
+            pcall(function()
+                networkClaim = Instance.new("RemoteEvent", game:GetService("ReplicatedStorage"))
+                networkClaim.Name = "TeleportRequest_" .. targetPlayer.UserId
+            end)
+            
+            pcall(function()
+                targetHum:ChangeState(Enum.HumanoidStateType.Physics)
+                targetRoot:PivotTo(localRoot.CFrame)
+                targetHum:ChangeState(Enum.HumanoidStateType.Running)
+                                targetChar:PivotTo(localRoot.CFrame)
+                
+                targetHum.WalkToPoint = localRoot.Position
+                
+                targetChar:SetPrimaryPartCFrame(localRoot.CFrame)
+            end)
+            
+            if networkClaim then
+                task.delay(1, function()
+                    pcall(function()
+                        networkClaim:Destroy()
+                    end)
+                end)
+            end
+            
+            return true
+        end
+        
+        attempts = attempts + 1
+        task.wait(0.1)
+    end
+    
+    return false
+end
+
 local function SaveCurrentPosition(posName)
     local char = game.Players.LocalPlayer.Character
     if char and char:FindFirstChild("HumanoidRootPart") then
@@ -127,39 +190,56 @@ Tabs.Main:AddParagraph({
     Content = "Select a player to teleport to them"
 })
 
+local selectedPlayer = nil
+
 local PlayerDropdown = Tabs.Main:AddDropdown("PlayerSelect", {
-    Title = "🎯 Select Player",
+    Title = "Select Player",
     Values = GetPlayers(),
     Multi = false,
-    Default = 1,
-})
-
-Tabs.Main:AddButton({
-    Title = "🔄 Refresh Players",
-    Description = "Update the list of players",
-    Icon = "refresh-cw",
-    Callback = function()
-        PlayerDropdown:SetValues(GetPlayers())
-        Notify("✅ Success", "Player list refreshed!", 2)
+    Default = "",
+    Callback = function(Value)
+        selectedPlayer = Value
     end
 })
 
 Tabs.Main:AddButton({
-    Title = "⚡ Teleport to Player",
-    Description = "Teleport to selected player",
-    Icon = "arrow-right",
+    Title = "🔄 Refresh Players",
+    Description = "Update the player list",
     Callback = function()
-        local selectedPlayer = PlayerDropdown.Value
-        if not selectedPlayer then 
-            Notify("❌ Error", "Please select a player!", 3)
-            return 
-        end
-        
-        local success = TeleportToPlayer(selectedPlayer)
-        if success then
-            Notify("✅ Success", "Teleported to " .. selectedPlayer, 2)
+        local players = GetPlayers()
+        PlayerDropdown:SetValues(players)
+        Notify("Players Refreshed", "Player list has been updated", 2)
+    end
+})
+
+Tabs.Main:AddButton({
+    Title = "🏃 Teleport to Player",
+    Description = "Teleport to the selected player's location",
+    Callback = function()
+        if selectedPlayer and selectedPlayer ~= "" then
+            if TeleportToPlayer(selectedPlayer) then
+                Notify("Success", "Teleported to " .. selectedPlayer, 2)
+            else
+                Notify("Error", "Failed to teleport to " .. selectedPlayer, 3)
+            end
         else
-            Notify("❌ Error", "Failed to teleport to " .. selectedPlayer, 3)
+            Notify("Error", "Please select a player first", 3)
+        end
+    end
+})
+
+Tabs.Main:AddButton({
+    Title = "🧲 Bring Player",
+    Description = "Bring the selected player to your location",
+    Callback = function()
+        if selectedPlayer and selectedPlayer ~= "" then
+            if BringPlayerToMe(selectedPlayer) then
+                Notify("Success", "Attempting to bring " .. selectedPlayer .. " to you", 2)
+            else
+                Notify("Error", "Failed to bring " .. selectedPlayer, 3)
+            end
+        else
+            Notify("Error", "Please select a player first", 3)
         end
     end
 })
@@ -186,16 +266,18 @@ Tabs.Positions:AddButton({
     Callback = function()
         local posName = PositionNameInput.Value
         if not posName or posName == "" then
-            Notify("❌ Error", "Please enter a position name!", 3)
+            Notify("Error", "Please enter a position name", 3)
             return
         end
         
         if SaveCurrentPosition(posName) then
-            SavedPositionsDropdown:SetValues(GetSavedPositionNames())
+            pcall(function()
+                SavedPositionsDropdown:SetValues(GetSavedPositionNames())
+            end)
             PositionNameInput:SetValue("")
-            Notify("✅ Success", "Position '" .. posName .. "' saved!", 2)
+            Notify("Position Saved", "Location '" .. posName .. "' has been saved", 2)
         else
-            Notify("❌ Error", "Failed to save position!", 3)
+            Notify("Error", "Failed to save position. Make sure your character exists", 3)
         end
     end
 })
@@ -224,7 +306,7 @@ Tabs.Positions:AddButton({
     Callback = function()
         local posName = SavedPositionsDropdown.Value
         if not posName then
-            Notify("❌ Error", "Please select a position!", 3)
+            Notify("Error", "Please select a position", 3)
             return
         end
         
@@ -232,12 +314,12 @@ Tabs.Positions:AddButton({
             local char = game.Players.LocalPlayer.Character
             if char and char:FindFirstChild("HumanoidRootPart") then
                 char.HumanoidRootPart.CFrame = SavedPositions[posName]
-                Notify("✅ Success", "Teleported to '" .. posName .. "'", 2)
+                Notify("Success", "Teleported to '" .. posName .. "'", 2)
             else
-                Notify("❌ Error", "Character not found!", 3)
+                Notify("Error", "Character not found", 3)
             end
         else
-            Notify("❌ Error", "Position not found!", 3)
+            Notify("Error", "Position not found", 3)
         end
     end
 })
@@ -249,7 +331,7 @@ Tabs.Positions:AddButton({
     Callback = function()
         LoadSavedPositions()
         SavedPositionsDropdown:SetValues(GetSavedPositionNames())
-        Notify("✅ Success", "Position list refreshed!", 2)
+        Notify("Success", "Position list refreshed", 2)
     end
 })
 
@@ -279,7 +361,7 @@ Tabs.Positions:AddButton({
     Callback = function()
         local posName = DeletePositionInput.Value
         if not posName or posName == "" then
-            Notify("❌ Error", "Please enter a position name!", 3)
+            Notify("Error", "Please enter a position name", 3)
             return
         end
         
@@ -288,9 +370,9 @@ Tabs.Positions:AddButton({
             SavePositionsToFile()
             SavedPositionsDropdown:SetValues(GetSavedPositionNames())
             DeletePositionInput:SetValue("")
-            Notify("✅ Success", "Position '" .. posName .. "' deleted!", 2)
+            Notify("Success", "Position '" .. posName .. "' deleted", 2)
         else
-            Notify("❌ Error", "Position not found!", 3)
+            Notify("Error", "Position not found", 3)
         end
     end
 })
