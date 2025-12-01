@@ -122,10 +122,21 @@ local SaveManager = {} do
 		local success, decoded = pcall(httpService.JSONDecode, httpService, readfile(file))
 		if not success then return false, 'decode error' end
 
+        print("[SaveManager] Loading config:", name)
 		for _, option in next, decoded.objects do
 			if self.Parser[option.type] then
-				task.spawn(function() self.Parser[option.type].Load(option.idx, option) end)
-			end
+                print("[SaveManager] Loading option:", option.idx, "Type:", option.type, "Value:", option.value)
+				task.spawn(function() 
+                    local success, err = pcall(function()
+                        self.Parser[option.type].Load(option.idx, option) 
+                    end)
+                    if not success then
+                        warn("[SaveManager] Error loading", option.idx, ":", err)
+                    end
+                end)
+			else
+                warn("[SaveManager] No parser for type:", option.type)
+            end
 		end
 
 		return true
