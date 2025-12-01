@@ -228,56 +228,70 @@ function Lumania:CreateWindow(config)
     local PopupOverlay = Create("Frame", {
         Parent = PopupContainer,
         BackgroundColor3 = Color3.new(0,0,0),
-        BackgroundTransparency = 0.5,
-        Size = UDim2.new(1, 0, 1, 0)
+        BackgroundTransparency = 1,
+        Size = UDim2.new(1, 0, 1, 0),
+        ZIndex = 200
     })
 
+    local ActivePopup = nil
+
     function Window:CreatePopup(title, text, options)
+        -- Close existing popup if any
+        if ActivePopup then
+            ActivePopup:Destroy()
+            ActivePopup = nil
+        end
+
         PopupContainer.Visible = true
+        
+        -- Fade in overlay
+        TweenService:Create(PopupOverlay, TWEEN_INFO, {BackgroundTransparency = 0.6}):Play()
         
         local Popup = Create("Frame", {
             Parent = PopupContainer,
             BackgroundColor3 = THEME.Secondary,
-            Position = UDim2.new(0.5, -150, 0.5, -75),
-            Size = UDim2.new(0, 300, 0, 150),
+            Position = UDim2.new(0.5, -175, 0.5, -100),
+            Size = UDim2.new(0, 0, 0, 0),
             BorderSizePixel = 0,
-            ClipsDescendants = true
+            ZIndex = 201
         })
         ApplyCorner(Popup, 10)
         ApplyStroke(Popup, THEME.Border, 1)
         
-        -- Animation
-        Popup.Size = UDim2.new(0, 0, 0, 0)
-        TweenService:Create(Popup, TWEEN_INFO, {Size = UDim2.new(0, 300, 0, 150)}):Play()
+        ActivePopup = Popup
 
         local PTitle = Create("TextLabel", {
             Parent = Popup,
             BackgroundTransparency = 1,
             Position = UDim2.new(0, 0, 0, 15),
-            Size = UDim2.new(1, 0, 0, 20),
+            Size = UDim2.new(1, 0, 0, 25),
             Font = Enum.Font.GothamBold,
             Text = title,
             TextColor3 = THEME.Text,
-            TextSize = 16
+            TextSize = 16,
+            ZIndex = 202
         })
 
         local PText = Create("TextLabel", {
             Parent = Popup,
             BackgroundTransparency = 1,
-            Position = UDim2.new(0, 20, 0, 45),
-            Size = UDim2.new(1, -40, 0, 40),
+            Position = UDim2.new(0, 20, 0, 50),
+            Size = UDim2.new(1, -40, 0, 60),
             Font = Enum.Font.Gotham,
             Text = text,
             TextColor3 = THEME.TextDim,
-            TextSize = 14,
-            TextWrapped = true
+            TextSize = 13,
+            TextWrapped = true,
+            TextYAlignment = Enum.TextYAlignment.Top,
+            ZIndex = 202
         })
 
         local BtnContainer = Create("Frame", {
             Parent = Popup,
             BackgroundTransparency = 1,
-            Position = UDim2.new(0, 10, 1, -45),
-            Size = UDim2.new(1, -20, 0, 35)
+            Position = UDim2.new(0, 15, 1, -50),
+            Size = UDim2.new(1, -30, 0, 35),
+            ZIndex = 202
         })
         
         local BtnLayout = Create("UIListLayout", {
@@ -288,27 +302,49 @@ function Lumania:CreateWindow(config)
             HorizontalAlignment = Enum.HorizontalAlignment.Center
         })
 
-        for _, opt in ipairs(options) do
+        local function ClosePopup()
+            TweenService:Create(Popup, TWEEN_INFO, {Size = UDim2.new(0, 0, 0, 0)}):Play()
+            TweenService:Create(PopupOverlay, TWEEN_INFO, {BackgroundTransparency = 1}):Play()
+            task.wait(0.25)
+            if ActivePopup == Popup then
+                PopupContainer.Visible = false
+                Popup:Destroy()
+                ActivePopup = nil
+            end
+        end
+
+        for i, opt in ipairs(options) do
             local Btn = Create("TextButton", {
                 Parent = BtnContainer,
-                BackgroundColor3 = THEME.Tertiary,
-                Size = UDim2.new(0, 100, 1, 0),
+                BackgroundColor3 = i == 1 and THEME.Accent or THEME.Tertiary,
+                Size = UDim2.new(0, 110, 1, 0),
                 Font = Enum.Font.GothamMedium,
                 Text = opt.Text,
                 TextColor3 = THEME.Text,
                 TextSize = 13,
-                AutoButtonColor = false
+                AutoButtonColor = false,
+                ZIndex = 202
             })
             ApplyCorner(Btn, 6)
             
+            Btn.MouseEnter:Connect(function()
+                TweenService:Create(Btn, TWEEN_INFO, {BackgroundColor3 = i == 1 and THEME.AccentHover or THEME.Secondary}):Play()
+            end)
+            
+            Btn.MouseLeave:Connect(function()
+                TweenService:Create(Btn, TWEEN_INFO, {BackgroundColor3 = i == 1 and THEME.Accent or THEME.Tertiary}):Play()
+            end)
+            
             Btn.MouseButton1Click:Connect(function()
-                if opt.Callback then opt.Callback() end
-                TweenService:Create(Popup, TWEEN_INFO, {Size = UDim2.new(0, 0, 0, 0)}):Play()
-                task.wait(0.2)
-                Popup:Destroy()
-                PopupContainer.Visible = false
+                if opt.Callback then 
+                    task.spawn(opt.Callback) 
+                end
+                ClosePopup()
             end)
         end
+
+        -- Animate popup in
+        TweenService:Create(Popup, TWEEN_INFO, {Size = UDim2.new(0, 350, 0, 200)}):Play()
     end
 
     function Window:Unload()
@@ -985,12 +1021,11 @@ function Lumania:CreateWindow(config)
         -- Slide out and destroy
         task.delay(duration, function()
             TweenService:Create(Notif, TWEEN_INFO, {
-                BackgroundTransparency = 1,
                 Position = UDim2.new(1, 50, 0, 0)
             }):Play()
             TweenService:Create(NotifLabel, TWEEN_INFO, {TextTransparency = 1}):Play()
             TweenService:Create(Bar, TWEEN_INFO, {BackgroundTransparency = 1}):Play()
-            task.wait(0.3)
+            task.wait(0.25)
             Notif:Destroy()
         end)
     end
