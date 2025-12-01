@@ -919,9 +919,80 @@ function Lumania:CreateWindow(config)
         return Tab
     end
     
+    -- Notification System
+    local NotificationContainer = Create("Frame", {
+        Name = "Notifications",
+        Parent = ScreenGui,
+        BackgroundTransparency = 1,
+        Position = UDim2.new(1, -320, 0, 20),
+        Size = UDim2.new(0, 300, 1, -40),
+        ZIndex = 100
+    })
+    
+    local NotificationLayout = Create("UIListLayout", {
+        Parent = NotificationContainer,
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        Padding = UDim.new(0, 10),
+        VerticalAlignment = Enum.VerticalAlignment.Top
+    })
+
     function Window:Notify(text, duration)
-        -- Notification logic (kept simple for brevity, can be expanded)
-        print("[NOTIF]", text)
+        duration = duration or 3
+        
+        local Notif = Create("Frame", {
+            Parent = NotificationContainer,
+            BackgroundColor3 = THEME.Secondary,
+            Size = UDim2.new(1, 0, 0, 60),
+            BackgroundTransparency = 1,
+            Position = UDim2.new(1, 50, 0, 0)
+        })
+        ApplyCorner(Notif, 8)
+        ApplyStroke(Notif, THEME.Border, 1)
+
+        local NotifLabel = Create("TextLabel", {
+            Parent = Notif,
+            BackgroundTransparency = 1,
+            Position = UDim2.new(0, 15, 0, 0),
+            Size = UDim2.new(1, -30, 1, -8),
+            Font = Enum.Font.GothamMedium,
+            Text = text,
+            TextColor3 = THEME.Text,
+            TextSize = 13,
+            TextXAlignment = Enum.TextXAlignment.Left,
+            TextYAlignment = Enum.TextYAlignment.Center,
+            TextWrapped = true
+        })
+
+        local Bar = Create("Frame", {
+            Parent = Notif,
+            BackgroundColor3 = THEME.Accent,
+            Position = UDim2.new(0, 0, 1, -3),
+            Size = UDim2.new(0, 0, 0, 3)
+        })
+        ApplyCorner(Bar, 2)
+
+        -- Slide in animation
+        TweenService:Create(Notif, TWEEN_INFO, {
+            BackgroundTransparency = 0,
+            Position = UDim2.new(0, 0, 0, 0)
+        }):Play()
+        
+        -- Progress bar animation
+        TweenService:Create(Bar, TweenInfo.new(duration, Enum.EasingStyle.Linear), {
+            Size = UDim2.new(1, 0, 0, 3)
+        }):Play()
+
+        -- Slide out and destroy
+        task.delay(duration, function()
+            TweenService:Create(Notif, TWEEN_INFO, {
+                BackgroundTransparency = 1,
+                Position = UDim2.new(1, 50, 0, 0)
+            }):Play()
+            TweenService:Create(NotifLabel, TWEEN_INFO, {TextTransparency = 1}):Play()
+            TweenService:Create(Bar, TWEEN_INFO, {BackgroundTransparency = 1}):Play()
+            task.wait(0.3)
+            Notif:Destroy()
+        end)
     end
 
     return Window
