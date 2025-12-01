@@ -104,7 +104,8 @@ function Lumania:CreateWindow(config)
         Name = "LumaniaUI",
         Parent = CoreGui,
         ZIndexBehavior = Enum.ZIndexBehavior.Sibling,
-        ResetOnSpawn = false
+        ResetOnSpawn = false,
+        IgnoreGuiInset = true -- Fix for popup covering full screen
     })
 
     -- Main Frame
@@ -515,7 +516,9 @@ function Lumania:CreateWindow(config)
                         TweenService:Create(Knob, TWEEN_INFO, {Position = UDim2.new(0, 2, 0.5, -8), BackgroundColor3 = THEME.TextDim}):Play()
                         Label.TextColor3 = THEME.TextDim
                     end
-                    if config.Callback then config.Callback(val) end
+                    if config.Callback then 
+                        task.spawn(function() config.Callback(val) end) 
+                    end
                 end
 
                 Button.MouseButton1Click:Connect(function()
