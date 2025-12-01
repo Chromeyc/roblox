@@ -979,8 +979,8 @@ function Lumania:CreateWindow(config)
             Parent = NotificationContainer,
             BackgroundColor3 = THEME.Secondary,
             Size = UDim2.new(1, 0, 0, 60),
-            BackgroundTransparency = 1,
-            Position = UDim2.new(1, 50, 0, 0)
+            BackgroundTransparency = 0,
+            Position = UDim2.new(1, 0, 0, 0)
         })
         ApplyCorner(Notif, 8)
         ApplyStroke(Notif, THEME.Border, 1)
@@ -1009,7 +1009,6 @@ function Lumania:CreateWindow(config)
 
         -- Slide in animation
         TweenService:Create(Notif, TWEEN_INFO, {
-            BackgroundTransparency = 0,
             Position = UDim2.new(0, 0, 0, 0)
         }):Play()
         
@@ -1021,7 +1020,7 @@ function Lumania:CreateWindow(config)
         -- Slide out and destroy
         task.delay(duration, function()
             local slideOut = TweenService:Create(Notif, TWEEN_INFO, {
-                Position = UDim2.new(1, 50, 0, 0)
+                Position = UDim2.new(1, 0, 0, 0)
             })
             slideOut:Play()
             slideOut.Completed:Wait()
