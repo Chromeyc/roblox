@@ -1023,8 +1023,6 @@ function Lumania:CreateWindow(config)
             TweenService:Create(Notif, TWEEN_INFO, {
                 Position = UDim2.new(1, 50, 0, 0)
             }):Play()
-            TweenService:Create(NotifLabel, TWEEN_INFO, {TextTransparency = 1}):Play()
-            TweenService:Create(Bar, TWEEN_INFO, {BackgroundTransparency = 1}):Play()
             task.wait(0.25)
             Notif:Destroy()
         end)
