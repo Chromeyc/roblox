@@ -1020,10 +1020,11 @@ function Lumania:CreateWindow(config)
 
         -- Slide out and destroy
         task.delay(duration, function()
-            TweenService:Create(Notif, TWEEN_INFO, {
+            local slideOut = TweenService:Create(Notif, TWEEN_INFO, {
                 Position = UDim2.new(1, 50, 0, 0)
-            }):Play()
-            task.wait(0.25)
+            })
+            slideOut:Play()
+            slideOut.Completed:Wait()
             Notif:Destroy()
         end)
     end
