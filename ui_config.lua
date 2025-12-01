@@ -1,4 +1,6 @@
 local httpService = game:GetService('HttpService')
+local Toggles = getgenv().Toggles
+local Options = getgenv().Options
 
 local SaveManager = {} do
 	SaveManager.Folder = 'LumaniaConfigs'
