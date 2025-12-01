@@ -5,6 +5,9 @@ Lumania.__index = Lumania
 getgenv().Toggles = {}
 getgenv().Options = {}
 
+local Toggles = getgenv().Toggles
+local Options = getgenv().Options
+
 -- Services
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
