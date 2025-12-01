@@ -122,7 +122,32 @@ local SaveManager = {} do
 		if not isfile(file) then return false, 'invalid file' end
 
 		local success, decoded = pcall(httpService.JSONDecode, httpService, readfile(file))
-		if not success then return false, 'decode error' end
+		if not success then 
+			-- Config is corrupted
+			if self.Library and self.Library.CreatePopup then
+				self.Library:CreatePopup("Config Corrupted", "The config file '" .. name .. "' is corrupted and cannot be loaded.", {
+					{
+						Text = "Delete Corrupted File",
+						Callback = function()
+							delfile(file)
+							self.Library:Notify("Deleted corrupted config: " .. name)
+							-- Refresh the config list
+							if Options.SaveManager_ConfigList then
+								Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
+								Options.SaveManager_ConfigList:SetValue(nil)
+							end
+						end
+					},
+					{
+						Text = "Cancel",
+						Callback = function() end
+					}
+				})
+			else
+				self.Library:Notify("Config corrupted: " .. name)
+			end
+			return false, 'decode error - corrupted file' 
+		end
 
 		for _, option in next, decoded.objects do
 			if self.Parser[option.type] then
