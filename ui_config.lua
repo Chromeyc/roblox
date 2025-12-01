@@ -83,7 +83,7 @@ local SaveManager = {} do
 			return false, 'no config file is selected'
 		end
 
-		local fullPath = self.Folder .. '/settings/' .. name .. '.json'
+		local fullPath = self.Folder .. '/' .. name .. '.json'
 
 		local data = {
 			objects = {}
@@ -116,7 +116,7 @@ local SaveManager = {} do
 			return false, 'no config file is selected'
 		end
 		
-		local file = self.Folder .. '/settings/' .. name .. '.json'
+		local file = self.Folder .. '/' .. name .. '.json'
 		if not isfile(file) then return false, 'invalid file' end
 
 		local success, decoded = pcall(httpService.JSONDecode, httpService, readfile(file))
@@ -124,7 +124,7 @@ local SaveManager = {} do
 
 		for _, option in next, decoded.objects do
 			if self.Parser[option.type] then
-				task.spawn(function() self.Parser[option.type].Load(option.idx, option) end) -- task.spawn() so the config loading wont get stuck.
+				task.spawn(function() self.Parser[option.type].Load(option.idx, option) end)
 			end
 		end
 
@@ -133,16 +133,14 @@ local SaveManager = {} do
 
 	function SaveManager:IgnoreThemeSettings()
 		self:SetIgnoreIndexes({ 
-			"BackgroundColor", "MainColor", "AccentColor", "Out1eColor", "FontColor", -- themes
-			"ThemeManager_ThemeList", 'ThemeManager_CustomThemeList', 'ThemeManager_CustomThemeName', -- themes
+			"BackgroundColor", "MainColor", "AccentColor", "OutlineColor", "FontColor",
+			"ThemeManager_ThemeList", 'ThemeManager_CustomThemeList', 'ThemeManager_CustomThemeName',
 		})
 	end
 
 	function SaveManager:BuildFolderTree()
 		local paths = {
-			self.Folder,
-			self.Folder .. '/themes',
-			self.Folder .. '/settings'
+			self.Folder
 		}
 
 		for i = 1, #paths do
@@ -154,14 +152,12 @@ local SaveManager = {} do
 	end
 
 	function SaveManager:RefreshConfigList()
-		local list = listfiles(self.Folder .. '/settings')
+		local list = listfiles(self.Folder)
 
 		local out = {}
 		for i = 1, #list do
 			local file = list[i]
 			if file:sub(-5) == '.json' then
-				-- i hate this but it has to be done ...
-
 				local pos = file:find('.json', 1, true)
 				local start = pos
 
@@ -185,8 +181,8 @@ local SaveManager = {} do
 	end
 
 	function SaveManager:LoadAutoloadConfig()
-		if isfile(self.Folder .. '/settings/autoload.txt') then
-			local name = readfile(self.Folder .. '/settings/autoload.txt')
+		if isfile(self.Folder .. '/autoload.txt') then
+			local name = readfile(self.Folder .. '/autoload.txt')
 
 			local success, err = self:Load(name)
 			if not success then
@@ -208,7 +204,8 @@ local SaveManager = {} do
 
 		section:AddDivider()
 
-		section:AddButton('Create config', function()
+		-- Compact Button Layout
+		section:AddButton('Create', function()
 			local name = Options.SaveManager_ConfigName.Value
 
 			if name:gsub(' ', '') == '' then 
@@ -224,7 +221,7 @@ local SaveManager = {} do
 
 			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
 			Options.SaveManager_ConfigList:SetValue(nil)
-		end):AddButton('Load config', function()
+		end):AddButton('Load', function()
 			local name = Options.SaveManager_ConfigList.Value
 
 			local success, err = self:Load(name)
@@ -235,7 +232,7 @@ local SaveManager = {} do
 			self.Library:Notify(string.format('Loaded config %q', name))
 		end)
 
-		section:AddButton('Overwrite config', function()
+		section:AddButton('Overwrite', function()
 			local name = Options.SaveManager_ConfigList.Value
 
 			local success, err = self:Save(name)
@@ -244,25 +241,23 @@ local SaveManager = {} do
 			end
 
 			self.Library:Notify(string.format('Overwrote config %q', name))
-		end)
-
-		section:AddButton('Refresh list', function()
+		end):AddButton('Refresh', function()
 			Options.SaveManager_ConfigList:SetValues(self:RefreshConfigList())
 			Options.SaveManager_ConfigList:SetValue(nil)
 		end)
 
-		section:AddButton('Set as autoload', function()
+		section:AddButton('Set Autoload', function()
 			local name = Options.SaveManager_ConfigList.Value
-			writefile(self.Folder .. '/settings/autoload.txt', name)
-			SaveManager.AutoloadLabel:SetText('Current autoload config: ' .. name)
+			writefile(self.Folder .. '/autoload.txt', name)
+			SaveManager.AutoloadLabel:SetText('Autoload: ' .. name)
 			self.Library:Notify(string.format('Set %q to auto load', name))
 		end)
 
-		SaveManager.AutoloadLabel = section:AddLabel('Current autoload config: none', true)
+		SaveManager.AutoloadLabel = section:AddLabel('Autoload: none')
 
-		if isfile(self.Folder .. '/settings/autoload.txt') then
-			local name = readfile(self.Folder .. '/settings/autoload.txt')
-			SaveManager.AutoloadLabel:SetText('Current autoload config: ' .. name)
+		if isfile(self.Folder .. '/autoload.txt') then
+			local name = readfile(self.Folder .. '/autoload.txt')
+			SaveManager.AutoloadLabel:SetText('Autoload: ' .. name)
 		end
 
 		SaveManager:SetIgnoreIndexes({ 'SaveManager_ConfigList', 'SaveManager_ConfigName' })
